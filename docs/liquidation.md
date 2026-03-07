@@ -28,13 +28,23 @@ The auction should also be deterministic.
 ### Auction sizing
 - `minDebtToAuction` (USD): debt-size threshold used to avoid dust liquidations.  
   If a borrower’s remaining debt `D` is `<= minDebtToAuction`, the protocol liquidates by targeting **100% of the remaining debt** in the auction (full close), rather than performing partial liquidations.
-- `targetLTV`: Instead of liquidating an arbitrary % of the debt (e.g., 50%), the protocol calculates how much debt must be repaid so the borrower’s position returns to a “healthy” level
 - `minCollateralLot`: minimum collateral amount per auction. If the computed auction lot is smaller than this, the protocol rounds up the lot to minCollateralLot to avoid “dust auctions” that are uneconomical for keepers (gas/fees > expected profit) and may fail to clear, which would delay liquidation and increase bad-debt risk.
 ### Risk parameter
 - `maxLTV`: maximum allowed LTV for borrow/withdraw actions (prevents users from entering risky positions) e.g 80% from collateral value
-- `liqLTV`: liquidation treshold; positions with LTV > liqLTV are eligible for liquidaiton and usually are higher than maxLTV
+- `liqLTV`: liquidation threshold; positions with LTV > liqLTV are eligible for liquidaiton and usually are higher than maxLTV
 - `bufferLTV`: the safety margin below liqLTV that you want after liquidation (e.g., 5–10%)
 
 ## Auction Curve
+Defines how the auction price moves from startPrice down to floorPrice over duration.
+- p0 = startPrice
+- pf = floorPrice
+- t = clamp(block.timestamp - startTime, 0, duration)
+- x = t / duration(0 -> 1)
+### Linear decay
+- price(t) = p0 - (p0 - pf) * x
+Price decay with the same rate from start until floor
+### Exponential decay
+- price(t) = max(pf, p0 * exp(-k *t))
+Price decay faster early, and slows as it approach floor
 
 ## Interfaces
