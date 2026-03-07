@@ -19,10 +19,14 @@ Risk engine is a stateless library imported by pool to compute per-account risk 
 - `debtToCover(account, price) -> uint256`: calculates how much debt must be covered to reach postLTV
 ### Internal API
 ### Events
+- N/A (library does not emit events)
 ### Errors / Reverts
+- N/A (RiskEngine performs calculations only and does not enforce protocol rules. It may still revert implicitly on EVM math failures (e.g., division by zero / overflow) if Pool passes invalid inputs. All validation and rule enforcement (oracle validity, zero checks, eligibility checks) is handled by Pool.)
 ### Modifier
+- N/A (library hold no state hence no modifier)
 
 ## State
+- N/A
 
 ## Edge Cases
 
